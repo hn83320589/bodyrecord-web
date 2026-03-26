@@ -1,0 +1,31 @@
+import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    { path: '/login', component: () => import('@/views/auth/LoginView.vue'), meta: { public: true } },
+    { path: '/register', component: () => import('@/views/auth/RegisterView.vue'), meta: { public: true } },
+    { path: '/', component: () => import('@/views/dashboard/DashboardView.vue'), meta: { requiresAuth: true } },
+    { path: '/records', component: () => import('@/views/records/RecordListView.vue'), meta: { requiresAuth: true } },
+    { path: '/records/new', component: () => import('@/views/records/RecordFormView.vue'), meta: { requiresAuth: true } },
+    { path: '/stats', component: () => import('@/views/stats/StatsView.vue'), meta: { requiresAuth: true } },
+    { path: '/lab', component: () => import('@/views/lab/LabListView.vue'), meta: { requiresAuth: true } },
+    { path: '/lab/new', component: () => import('@/views/lab/LabFormView.vue'), meta: { requiresAuth: true } },
+    { path: '/lab/trend', component: () => import('@/views/lab/LabTrendView.vue'), meta: { requiresAuth: true } },
+    { path: '/health-records', component: () => import('@/views/health-records/HealthRecordListView.vue'), meta: { requiresAuth: true } },
+    { path: '/health-records/:id', component: () => import('@/views/health-records/HealthRecordDetailView.vue'), meta: { requiresAuth: true } },
+    { path: '/medications', component: () => import('@/views/medication/MedicationListView.vue'), meta: { requiresAuth: true } },
+    { path: '/nhi', component: () => import('@/views/nhi/NhiImportView.vue'), meta: { requiresAuth: true } },
+    { path: '/profile', component: () => import('@/views/profile/ProfileView.vue'), meta: { requiresAuth: true } },
+  ],
+})
+
+router.beforeEach((to) => {
+  const auth = useAuthStore()
+  if (to.meta.requiresAuth && !auth.isLoggedIn) return '/login'
+  if (to.meta.public && auth.isLoggedIn) return '/'
+  return true
+})
+
+export default router
