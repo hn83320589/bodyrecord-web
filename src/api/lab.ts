@@ -14,6 +14,6 @@ export const labApi = {
     client.get('/lab-results', { params }),
   create: (data: CreateLabResultsRequest): Promise<void> => client.post('/lab-results', data),
   delete: (id: number): Promise<void> => client.delete(`/lab-results/${id}`),
-  trend: (itemCode: string): Promise<LabTrendRawPoint[]> =>
-    client.get('/lab-results/trend', { params: { itemCode } }),
+  trend: (itemCode: string, itemName: string): Promise<LabTrendRawPoint[]> =>
+    client.get('/lab-results/trend', { params: { itemCode, itemName } }),
 }

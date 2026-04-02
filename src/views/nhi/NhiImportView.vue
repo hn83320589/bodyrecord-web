@@ -19,6 +19,7 @@
             <p>看診：{{ importResult.healthRecordCount }} 筆</p>
             <p>用藥：{{ importResult.medicationCount }} 項</p>
             <p>檢驗：{{ importResult.labCount }} 筆</p>
+            <p v-if="importResult.newItemCount">新增項目：{{ importResult.newItemCount }} 個</p>
             <p v-if="importResult.skippedLabs">跳過：{{ importResult.skippedLabs }} 項</p>
             <p>日期範圍：{{ importResult.dateRangeStart }} ~ {{ importResult.dateRangeEnd }}</p>
           </div>

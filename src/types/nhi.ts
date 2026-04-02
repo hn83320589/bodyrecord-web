@@ -8,6 +8,7 @@ export interface NhiImportResult {
   medicationCount: number
   labCount: number
   skippedLabs: number
+  newItemCount: number  // 本次自動新增的新檢驗項目數
 }
 
 export interface NhiImportLog {

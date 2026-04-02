@@ -22,10 +22,10 @@ export const useLabStore = defineStore('lab', () => {
     await fetchGroups()
   }
 
-  async function fetchTrend(itemCode: string) {
+  async function fetchTrend(itemCode: string, itemName: string) {
     loading.value = true
     try {
-      trendPoints.value = await labApi.trend(itemCode)
+      trendPoints.value = await labApi.trend(itemCode, itemName)
     } finally {
       loading.value = false
     }

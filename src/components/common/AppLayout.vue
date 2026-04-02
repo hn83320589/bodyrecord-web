@@ -7,6 +7,7 @@
           <RouterLink to="/records" class="text-gray-600 hover:text-indigo-600" active-class="text-indigo-600 font-medium">血壓</RouterLink>
           <RouterLink to="/stats" class="text-gray-600 hover:text-indigo-600" active-class="text-indigo-600 font-medium">統計</RouterLink>
           <RouterLink to="/lab" class="text-gray-600 hover:text-indigo-600" active-class="text-indigo-600 font-medium">檢驗</RouterLink>
+          <RouterLink to="/lab/items" class="text-gray-600 hover:text-indigo-600" active-class="text-indigo-600 font-medium">檢驗項目</RouterLink>
           <RouterLink to="/health-records" class="text-gray-600 hover:text-indigo-600" active-class="text-indigo-600 font-medium">看診</RouterLink>
           <RouterLink to="/medications" class="text-gray-600 hover:text-indigo-600" active-class="text-indigo-600 font-medium">用藥</RouterLink>
           <RouterLink to="/nhi" class="text-gray-600 hover:text-indigo-600" active-class="text-indigo-600 font-medium">匯入</RouterLink>

@@ -13,6 +13,7 @@ const router = createRouter({
     { path: '/lab', component: () => import('@/views/lab/LabListView.vue'), meta: { requiresAuth: true } },
     { path: '/lab/new', component: () => import('@/views/lab/LabFormView.vue'), meta: { requiresAuth: true } },
     { path: '/lab/trend', component: () => import('@/views/lab/LabTrendView.vue'), meta: { requiresAuth: true } },
+    { path: '/lab/items', component: () => import('@/views/lab/UserLabItemView.vue'), meta: { requiresAuth: true } },
     { path: '/health-records', component: () => import('@/views/health-records/HealthRecordListView.vue'), meta: { requiresAuth: true } },
     { path: '/health-records/:id', component: () => import('@/views/health-records/HealthRecordDetailView.vue'), meta: { requiresAuth: true } },
     { path: '/medications', component: () => import('@/views/medication/MedicationListView.vue'), meta: { requiresAuth: true } },
