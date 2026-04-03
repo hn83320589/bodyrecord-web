@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { useAuthStore } from '@/stores/auth'
 import type { NhiImportResult, NhiImportLog } from '@/types/nhi'
 
 const nhiClient = axios.create({
@@ -8,8 +7,8 @@ const nhiClient = axios.create({
 })
 
 nhiClient.interceptors.request.use((config) => {
-  const auth = useAuthStore()
-  if (auth.token) config.headers.Authorization = `Bearer ${auth.token}`
+  const token = localStorage.getItem('token')
+  if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
 

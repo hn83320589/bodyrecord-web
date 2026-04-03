@@ -18,7 +18,6 @@
     <LoadingSpinner v-if="loading" />
     <div v-else-if="timelineItems.length > 0">
       <template v-for="(item, idx) in timelineItems" :key="idx">
-        <!-- Month separator -->
         <div v-if="item.showMonth" class="flex items-center gap-3 mb-3" :class="idx > 0 ? 'mt-4' : ''">
           <span class="text-xs font-semibold text-content-tertiary uppercase tracking-widest">{{ item.monthLabel }}</span>
           <div class="flex-1 h-px bg-border-default"></div>
@@ -80,7 +79,6 @@ const categoryOptions = [
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
 
-// ── Stat card values ──
 const avgBp = computed(() => {
   if (bpStore.records.length === 0) return null
   const avg = (arr: number[]) => Math.round(arr.reduce((a, b) => a + b, 0) / arr.length)
@@ -118,7 +116,6 @@ const nextVisitHospital = computed(() => {
   return future.sort((a, b) => new Date(a.clinicDate).getTime() - new Date(b.clinicDate).getTime())[0].hospital ?? ''
 })
 
-// ── Range filter ──
 const rangeStart = computed(() => {
   const now = new Date()
   const monthMap: Record<string, number> = { '1m': 1, '3m': 3, '6m': 6, '1y': 12 }
@@ -126,7 +123,6 @@ const rangeStart = computed(() => {
   return new Date(now.getFullYear(), now.getMonth() - months, now.getDate())
 })
 
-// ── Timeline items ──
 interface TimelineItem {
   date: Date
   day: number
@@ -147,21 +143,15 @@ const timelineItems = computed((): TimelineItem[] => {
   const items: Omit<TimelineItem, 'showMonth' | 'monthLabel'>[] = []
   const start = rangeStart.value
 
-  // Blood Pressure
   if (category.value === 'all' || category.value === 'bp') {
     for (const r of bpStore.records) {
       const d = new Date(r.recordedAt)
       if (d < start) continue
       const cat = classifyBP(r.systolic, r.diastolic)
       items.push({
-        date: d,
-        day: d.getDate(),
-        weekday: WEEKDAYS[d.getDay()],
-        title: '血壓量測',
-        badge: '血壓',
-        category: 'bp',
-        value: `${r.systolic}/${r.diastolic}`,
-        unit: 'mmHg',
+        date: d, day: d.getDate(), weekday: WEEKDAYS[d.getDay()],
+        title: '血壓量測', badge: '血壓', category: 'bp',
+        value: `${r.systolic}/${r.diastolic}`, unit: 'mmHg',
         flag: cat === 'high2' || cat === 'crisis' ? '⚠' : undefined,
         description: r.note ?? undefined,
         onClick: () => router.push('/records'),
@@ -169,20 +159,14 @@ const timelineItems = computed((): TimelineItem[] => {
     }
   }
 
-  // Lab Results
   if (category.value === 'all' || category.value === 'lab') {
     for (const g of labStore.groups) {
       const d = new Date(g.date)
       if (d < start) continue
       const abnormal = g.items.filter(i => i.isAbnormal)
-      const firstItem = g.items[0]
       items.push({
-        date: d,
-        day: d.getDate(),
-        weekday: WEEKDAYS[d.getDay()],
-        title: firstItem?.category ?? '檢驗紀錄',
-        badge: '檢驗',
-        category: 'lab',
+        date: d, day: d.getDate(), weekday: WEEKDAYS[d.getDay()],
+        title: g.items[0]?.category ?? '檢驗紀錄', badge: '檢驗', category: 'lab',
         value: abnormal.length > 0
           ? `${abnormal[0].itemName} ${abnormal[0].valueNumeric ?? abnormal[0].valueText ?? ''}`
           : `${g.items.length} 項`,
@@ -194,46 +178,34 @@ const timelineItems = computed((): TimelineItem[] => {
     }
   }
 
-  // Health Records (visits)
   if (category.value === 'all' || category.value === 'visit') {
     for (const r of hrStore.records) {
       const d = new Date(r.clinicDate)
       if (d < start) continue
       items.push({
-        date: d,
-        day: d.getDate(),
-        weekday: WEEKDAYS[d.getDay()],
-        title: r.primaryDiagnosis ?? '門診',
-        badge: '回診',
-        category: 'visit',
+        date: d, day: d.getDate(), weekday: WEEKDAYS[d.getDay()],
+        title: r.primaryDiagnosis ?? '門診', badge: '回診', category: 'visit',
         description: r.hospital ?? undefined,
         onClick: () => router.push(`/health-records/${r.id}`),
       })
     }
   }
 
-  // Medications
   if (category.value === 'all' || category.value === 'med') {
     for (const m of medStore.medications) {
       const d = new Date(m.recordedAt)
       if (d < start) continue
       items.push({
-        date: d,
-        day: d.getDate(),
-        weekday: WEEKDAYS[d.getDay()],
-        title: m.drugName,
-        badge: '用藥',
-        category: 'med',
+        date: d, day: d.getDate(), weekday: WEEKDAYS[d.getDay()],
+        title: m.drugName, badge: '用藥', category: 'med',
         description: m.days ? `${m.days} 天` : undefined,
         onClick: () => router.push('/medications'),
       })
     }
   }
 
-  // Sort by date descending
   items.sort((a, b) => b.date.getTime() - a.date.getTime())
 
-  // Add month separators
   let lastMonth = ''
   return items.map(item => {
     const monthKey = `${item.date.getFullYear()}-${item.date.getMonth()}`
@@ -246,7 +218,7 @@ const timelineItems = computed((): TimelineItem[] => {
 
 onMounted(async () => {
   loading.value = true
-  await Promise.all([
+  await Promise.allSettled([
     bpStore.fetchRecords(),
     labStore.fetchGroups(),
     hrStore.fetchRecords(),

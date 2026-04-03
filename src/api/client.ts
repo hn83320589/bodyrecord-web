@@ -1,6 +1,4 @@
 import axios from 'axios'
-import { useAuthStore } from '@/stores/auth'
-import router from '@/router'
 
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -9,8 +7,8 @@ const client = axios.create({
 })
 
 client.interceptors.request.use((config) => {
-  const auth = useAuthStore()
-  if (auth.token) config.headers.Authorization = `Bearer ${auth.token}`
+  const token = localStorage.getItem('token')
+  if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
 
@@ -20,7 +18,13 @@ client.interceptors.response.use(
     return res.data.data
   },
   (err) => {
-    if (err.response?.status === 401) { useAuthStore().logout(); router.push('/login') }
+    if (err.response?.status === 401) {
+      localStorage.removeItem('token')
+      localStorage.removeItem('userId')
+      localStorage.removeItem('userName')
+      localStorage.removeItem('userEmail')
+      window.location.href = '/login'
+    }
     return Promise.reject(new Error(err.response?.data?.message || err.message || '網路錯誤'))
   }
 )
