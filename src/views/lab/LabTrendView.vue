@@ -1,18 +1,18 @@
 <template>
   <AppLayout>
     <PageHeader title="檢驗趨勢" />
-    <div class="bg-white rounded-xl shadow p-6">
-      <div v-if="loadingItems" class="text-sm text-gray-400 mb-4">載入項目中...</div>
+    <div class="bg-surface-card rounded-card shadow-sm p-6">
+      <div v-if="loadingItems" class="text-sm text-content-tertiary mb-4">載入項目中...</div>
       <div v-else class="flex gap-2 mb-6 flex-wrap">
         <button v-for="item in userLabItems" :key="`${item.itemCode}-${item.itemName}`"
           @click="selectItem(item)"
           :class="['px-3 py-1 rounded-full text-xs font-medium transition',
-            isSelected(item) ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']">
+            isSelected(item) ? 'bg-accent text-white' : 'bg-surface-alt text-content-secondary hover:bg-border-default']">
           {{ item.itemName }}
         </button>
       </div>
       <LabTrendChart v-if="trendData && !store.loading" :trends="[trendData]" :loading="store.loading" />
-      <p v-else-if="!store.loading" class="text-center text-gray-400 py-12">選擇指標查看趨勢</p>
+      <p v-else-if="!store.loading" class="text-center text-content-tertiary py-12">選擇指標查看趨勢</p>
       <LoadingSpinner v-else />
     </div>
   </AppLayout>

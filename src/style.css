@@ -1,1 +1,109 @@
 @import "tailwindcss";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/600.css";
+@import "@fontsource/jetbrains-mono/700.css";
+
+/* Dark mode variant - class strategy */
+@variant dark (&:where(.dark, .dark *));
+
+/* ── CSS Variables (Light / Dark) ── */
+:root {
+  --surface-primary: #F7F8FA;
+  --surface-card: #FFFFFF;
+  --surface-alt: #F0F2F5;
+  --border-default: #E2E5EA;
+  --border-active: #94A3B8;
+  --text-primary: #1E293B;
+  --text-secondary: #64748B;
+  --text-tertiary: #94A3B8;
+  --accent: #3B82F6;
+  --accent-light: #DBEAFE;
+  --accent-dark: #1D4ED8;
+  --status-success: #10B981;
+  --status-success-bg: #D1FAE5;
+  --status-warning: #F59E0B;
+  --status-warning-bg: #FEF3C7;
+  --status-danger: #EF4444;
+  --status-danger-bg: #FEE2E2;
+  --timeline-line: #CBD5E1;
+  --timeline-dot: #3B82F6;
+  --radius-card: 8px;
+  --cat-bp: #3B82F6;
+  --cat-bp-bg: #DBEAFE;
+  --cat-lab: #10B981;
+  --cat-lab-bg: #D1FAE5;
+  --cat-visit: #F59E0B;
+  --cat-visit-bg: #FEF3C7;
+  --cat-med: #8B5CF6;
+  --cat-med-bg: #EDE9FE;
+}
+
+.dark {
+  --surface-primary: #0F172A;
+  --surface-card: #1E293B;
+  --surface-alt: #334155;
+  --border-default: #334155;
+  --border-active: #475569;
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-tertiary: #64748B;
+  --accent: #38BDF8;
+  --accent-light: #0C4A6E;
+  --accent-dark: #7DD3FC;
+  --status-success: #34D399;
+  --status-success-bg: #064E3B;
+  --status-warning: #FBBF24;
+  --status-warning-bg: #422006;
+  --status-danger: #FB7185;
+  --status-danger-bg: #4C1D2A;
+  --timeline-line: #475569;
+  --timeline-dot: #38BDF8;
+  --radius-card: 12px;
+  --cat-bp: #38BDF8;
+  --cat-bp-bg: #0C4A6E;
+  --cat-lab: #34D399;
+  --cat-lab-bg: #064E3B;
+  --cat-visit: #FBBF24;
+  --cat-visit-bg: #422006;
+  --cat-med: #A78BFA;
+  --cat-med-bg: #2E1065;
+}
+
+/* ── Tailwind v4 Theme Tokens ── */
+@theme {
+  --color-surface-primary: var(--surface-primary);
+  --color-surface-card: var(--surface-card);
+  --color-surface-alt: var(--surface-alt);
+  --color-border-default: var(--border-default);
+  --color-border-active: var(--border-active);
+  --color-content-primary: var(--text-primary);
+  --color-content-secondary: var(--text-secondary);
+  --color-content-tertiary: var(--text-tertiary);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-dark: var(--accent-dark);
+  --color-status-success: var(--status-success);
+  --color-status-success-bg: var(--status-success-bg);
+  --color-status-warning: var(--status-warning);
+  --color-status-warning-bg: var(--status-warning-bg);
+  --color-status-danger: var(--status-danger);
+  --color-status-danger-bg: var(--status-danger-bg);
+  --color-timeline-line: var(--timeline-line);
+  --color-timeline-dot: var(--timeline-dot);
+  --color-cat-bp: var(--cat-bp);
+  --color-cat-bp-bg: var(--cat-bp-bg);
+  --color-cat-lab: var(--cat-lab);
+  --color-cat-lab-bg: var(--cat-lab-bg);
+  --color-cat-visit: var(--cat-visit);
+  --color-cat-visit-bg: var(--cat-visit-bg);
+  --color-cat-med: var(--cat-med);
+  --color-cat-med-bg: var(--cat-med-bg);
+  --font-family-sans: "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-mono: "JetBrains Mono", "SF Mono", monospace;
+  --radius-card: var(--radius-card);
+}
+
+/* Dark mode numeric values use mono font */
+.dark .font-data {
+  font-family: var(--font-family-mono);
+}

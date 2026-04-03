@@ -2,9 +2,9 @@
   <AppLayout>
     <PageHeader :title="detail?.hospital ?? '看診詳情'">
       <div class="flex gap-2">
-        <RouterLink to="/health-records" class="text-sm text-gray-500 hover:text-gray-700">返回列表</RouterLink>
+        <RouterLink to="/health-records" class="text-sm text-content-tertiary hover:text-content-secondary">返回列表</RouterLink>
         <button v-if="detail?.source === 'nhi_import'" @click="handleDelete"
-          class="text-sm text-red-500 hover:text-red-700 border border-red-200 px-3 py-1 rounded-lg">
+          class="text-sm text-status-danger hover:opacity-80 border border-status-danger/30 px-3 py-1 rounded-lg">
           刪除此次看診
         </button>
       </div>
@@ -12,48 +12,48 @@
     <LoadingSpinner v-if="store.loading" />
     <div v-else-if="detail" class="space-y-6">
       <!-- Basic Info -->
-      <div class="bg-white rounded-xl shadow p-6">
+      <div class="bg-surface-card rounded-card shadow-sm p-6">
         <div class="grid grid-cols-2 gap-4 text-sm">
-          <div><span class="text-gray-500">就醫日期：</span><span class="text-gray-800">{{ formatDate(detail.clinicDate) }}</span></div>
-          <div><span class="text-gray-500">醫院：</span><span class="text-gray-800">{{ detail.hospital ?? '-' }}</span></div>
-          <div><span class="text-gray-500">主診斷代碼：</span><span class="text-gray-800">{{ detail.primaryIcdCode ?? '-' }}</span></div>
-          <div><span class="text-gray-500">主診斷：</span><span class="text-gray-800 font-medium">{{ detail.primaryDiagnosis ?? '-' }}</span></div>
-          <div v-if="detail.copay"><span class="text-gray-500">部分負擔：</span><span class="text-gray-800">{{ detail.copay }} 元</span></div>
+          <div><span class="text-content-tertiary">就醫日期：</span><span class="text-content-primary">{{ formatDate(detail.clinicDate) }}</span></div>
+          <div><span class="text-content-tertiary">醫院：</span><span class="text-content-primary">{{ detail.hospital ?? '-' }}</span></div>
+          <div><span class="text-content-tertiary">主診斷代碼：</span><span class="text-content-primary">{{ detail.primaryIcdCode ?? '-' }}</span></div>
+          <div><span class="text-content-tertiary">主診斷：</span><span class="text-content-primary font-medium">{{ detail.primaryDiagnosis ?? '-' }}</span></div>
+          <div v-if="detail.copay"><span class="text-content-tertiary">部分負擔：</span><span class="text-content-primary font-data">{{ detail.copay }} 元</span></div>
         </div>
       </div>
 
       <!-- Secondary Diagnoses -->
-      <div v-if="secondaryDiagnoses.length" class="bg-white rounded-xl shadow p-6">
-        <h3 class="text-sm font-semibold text-gray-700 mb-3">次診斷</h3>
+      <div v-if="secondaryDiagnoses.length" class="bg-surface-card rounded-card shadow-sm p-6">
+        <h3 class="text-sm font-semibold text-content-secondary mb-3">次診斷</h3>
         <div class="space-y-1">
           <div v-for="d in secondaryDiagnoses" :key="d.code" class="text-sm">
-            <span class="text-gray-500">{{ d.code }}</span>
-            <span class="text-gray-800 ml-2">{{ d.name }}</span>
+            <span class="text-content-tertiary">{{ d.code }}</span>
+            <span class="text-content-primary ml-2">{{ d.name }}</span>
           </div>
         </div>
       </div>
 
       <!-- Medications -->
-      <div class="bg-white rounded-xl shadow p-6">
-        <h3 class="text-sm font-semibold text-gray-700 mb-3">用藥清單</h3>
+      <div class="bg-surface-card rounded-card shadow-sm p-6">
+        <h3 class="text-sm font-semibold text-content-secondary mb-3">用藥清單</h3>
         <div v-if="medications.length > 0" class="space-y-2">
           <div v-for="m in medications" :key="m.id" class="flex items-center justify-between text-sm">
-            <span class="text-gray-800">{{ m.drugName }}</span>
-            <span class="text-gray-500">{{ m.quantity ? `${m.quantity} 顆` : '' }} {{ m.days ? `× ${m.days}天` : '' }}</span>
+            <span class="text-content-primary">{{ m.drugName }}</span>
+            <span class="text-content-tertiary font-data">{{ m.quantity ? `${m.quantity} 顆` : '' }} {{ m.days ? `× ${m.days}天` : '' }}</span>
           </div>
         </div>
-        <p v-else class="text-sm text-gray-400">無用藥紀錄</p>
+        <p v-else class="text-sm text-content-tertiary">無用藥紀錄</p>
       </div>
 
       <!-- Lab Results -->
-      <div class="bg-white rounded-xl shadow p-6">
-        <h3 class="text-sm font-semibold text-gray-700 mb-3">檢驗結果</h3>
+      <div class="bg-surface-card rounded-card shadow-sm p-6">
+        <h3 class="text-sm font-semibold text-content-secondary mb-3">檢驗結果</h3>
         <div v-if="detail.labResults.length > 0">
           <table class="w-full text-sm">
             <tbody>
-              <tr v-for="item in detail.labResults" :key="item.id" class="border-t border-gray-100 first:border-0">
-                <td class="py-2 text-gray-700">{{ item.itemName }}</td>
-                <td class="py-2">
+              <tr v-for="item in detail.labResults" :key="item.id" class="border-t border-border-default first:border-0">
+                <td class="py-2 text-content-secondary">{{ item.itemName }}</td>
+                <td class="py-2 font-data">
                   <LabValueBadge
                     :is-numeric="item.isNumeric"
                     :value-numeric="item.valueNumeric"
@@ -64,12 +64,12 @@
                     :is-abnormal="item.isAbnormal"
                   />
                 </td>
-                <td class="py-2 text-gray-400 text-xs">{{ item.normalMin ?? '-' }} ~ {{ item.normalMax ?? '-' }} {{ item.unit }}</td>
+                <td class="py-2 text-content-tertiary text-xs font-data">{{ item.normalMin ?? '-' }} ~ {{ item.normalMax ?? '-' }} {{ item.unit }}</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <p v-else class="text-sm text-gray-400">無檢驗紀錄</p>
+        <p v-else class="text-sm text-content-tertiary">無檢驗紀錄</p>
       </div>
     </div>
   </AppLayout>

@@ -30,14 +30,11 @@ const option = computed(() => {
         const date = formatDate(allDates[params[0].dataIndex])
         const lines = params.map((p, i) => {
           const t = props.trends[i]
-          const pt = t.points.find(x => x.recordedAt === allDates[p.dataIndex])
           if (p.value == null) return ''
           const flag = t.normalMax != null && p.value > t.normalMax ? ' ↑'
                      : t.normalMin != null && p.value < t.normalMin ? ' ↓' : ''
           const col = flag === ' ↑' ? '#ef4444' : flag === ' ↓' ? '#3b82f6' : p.color
-          const src = pt?.source === 'nhi_import' && pt?.hospital
-            ? `<span style="color:#9ca3af;font-size:10px"> · ${pt.hospital}</span>` : ''
-          return `<span style="color:${col}">${t.itemCode}：${p.value} ${t.unit}${flag}</span>${src}`
+          return `<span style="color:${col}">${t.itemCode}：${p.value} ${t.unit}${flag}</span>`
         }).filter(Boolean)
         return `<b>${date}</b><br/>${lines.join('<br/>')}`
       },

@@ -1,12 +1,12 @@
 <template>
   <AppLayout>
     <PageHeader title="血壓統計" />
-    <div class="bg-white rounded-xl shadow p-6">
+    <div class="bg-surface-card rounded-card shadow-sm p-6">
       <div class="flex gap-2 mb-6">
         <button v-for="opt in rangeOptions" :key="opt.value"
           @click="selectedRange = opt.value; loadTrend()"
           :class="['px-4 py-1.5 rounded-full text-sm font-medium transition',
-            selectedRange === opt.value ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']">
+            selectedRange === opt.value ? 'bg-accent text-white' : 'bg-surface-alt text-content-secondary hover:bg-border-default']">
           {{ opt.label }}
         </button>
       </div>

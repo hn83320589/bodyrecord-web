@@ -1,122 +1,122 @@
 <template>
   <AppLayout>
     <PageHeader title="檢驗項目管理" subtitle="管理您的檢驗項目參考值與單位">
-      <RouterLink to="/lab" class="text-sm text-gray-500 hover:text-gray-700">返回列表</RouterLink>
+      <RouterLink to="/lab" class="text-sm text-content-tertiary hover:text-content-secondary">返回列表</RouterLink>
     </PageHeader>
 
     <!-- 新增自訂項目 -->
-    <div class="bg-white rounded-xl shadow p-6 mb-6">
-      <h3 class="text-sm font-semibold text-gray-700 mb-4">新增自訂項目</h3>
+    <div class="bg-surface-card rounded-card shadow-sm p-6 mb-6">
+      <h3 class="text-sm font-semibold text-content-secondary mb-4">新增自訂項目</h3>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
         <div>
-          <label class="block text-xs text-gray-500 mb-1">申報代碼</label>
+          <label class="block text-xs text-content-tertiary mb-1">申報代碼</label>
           <input v-model="newItem.itemCode" type="text" placeholder="如：09015C"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            class="w-full border border-border-default rounded-lg px-3 py-2 text-sm bg-surface-card text-content-primary" />
         </div>
         <div>
-          <label class="block text-xs text-gray-500 mb-1">項目名稱</label>
+          <label class="block text-xs text-content-tertiary mb-1">項目名稱</label>
           <input v-model="newItem.itemName" type="text" placeholder="如：CRE(肌酸酐)"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            class="w-full border border-border-default rounded-lg px-3 py-2 text-sm bg-surface-card text-content-primary" />
         </div>
         <div>
-          <label class="block text-xs text-gray-500 mb-1">單位</label>
+          <label class="block text-xs text-content-tertiary mb-1">單位</label>
           <input v-model="newItem.unit" type="text" placeholder="如：mg/dL"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            class="w-full border border-border-default rounded-lg px-3 py-2 text-sm bg-surface-card text-content-primary" />
         </div>
         <div>
-          <label class="block text-xs text-gray-500 mb-1">類別</label>
+          <label class="block text-xs text-content-tertiary mb-1">類別</label>
           <input v-model="newItem.category" type="text" placeholder="如：腎功能"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            class="w-full border border-border-default rounded-lg px-3 py-2 text-sm bg-surface-card text-content-primary" />
         </div>
         <div>
-          <label class="block text-xs text-gray-500 mb-1">正常下限</label>
+          <label class="block text-xs text-content-tertiary mb-1">正常下限</label>
           <input v-model.number="newItem.normalMin" type="number" step="0.01"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            class="w-full border border-border-default rounded-lg px-3 py-2 text-sm bg-surface-card text-content-primary" />
         </div>
         <div>
-          <label class="block text-xs text-gray-500 mb-1">正常上限</label>
+          <label class="block text-xs text-content-tertiary mb-1">正常上限</label>
           <input v-model.number="newItem.normalMax" type="number" step="0.01"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            class="w-full border border-border-default rounded-lg px-3 py-2 text-sm bg-surface-card text-content-primary" />
         </div>
       </div>
-      <p v-if="createError" class="text-sm text-red-600 mt-2">{{ createError }}</p>
+      <p v-if="createError" class="text-sm text-status-danger mt-2">{{ createError }}</p>
       <button @click="handleCreate" :disabled="creating || !newItem.itemCode || !newItem.itemName"
-        class="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50">
+        class="mt-4 bg-accent text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-accent-dark disabled:opacity-50">
         {{ creating ? '新增中...' : '新增項目' }}
       </button>
     </div>
 
     <!-- 項目列表 -->
     <LoadingSpinner v-if="loading" />
-    <div v-else class="bg-white rounded-xl shadow overflow-hidden">
+    <div v-else class="bg-surface-card rounded-card shadow-sm overflow-hidden">
       <table class="w-full text-sm">
-        <thead class="bg-gray-50">
+        <thead class="bg-surface-alt">
           <tr>
-            <th class="text-left px-4 py-3 text-gray-600 font-medium">申報代碼</th>
-            <th class="text-left px-4 py-3 text-gray-600 font-medium">項目名稱</th>
-            <th class="text-left px-4 py-3 text-gray-600 font-medium">單位</th>
-            <th class="text-left px-4 py-3 text-gray-600 font-medium">類別</th>
-            <th class="text-left px-4 py-3 text-gray-600 font-medium">正常範圍</th>
+            <th class="text-left px-4 py-3 text-content-secondary font-medium">申報代碼</th>
+            <th class="text-left px-4 py-3 text-content-secondary font-medium">項目名稱</th>
+            <th class="text-left px-4 py-3 text-content-secondary font-medium">單位</th>
+            <th class="text-left px-4 py-3 text-content-secondary font-medium">類別</th>
+            <th class="text-left px-4 py-3 text-content-secondary font-medium">正常範圍</th>
             <th class="px-4 py-3"></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in items" :key="item.id" class="border-t border-gray-100">
-            <td class="px-4 py-3 text-gray-500 font-mono text-xs">
+          <tr v-for="item in items" :key="item.id" class="border-t border-border-default">
+            <td class="px-4 py-3 text-content-tertiary font-mono text-xs">
               {{ item.itemCode }}
-              <span v-if="item.isPreset" class="ml-1 text-gray-400" title="系統預設">🔒</span>
+              <span v-if="item.isPreset" class="ml-1 text-content-tertiary" title="系統預設">🔒</span>
             </td>
-            <td class="px-4 py-3 text-gray-800 font-medium">{{ item.itemName }}</td>
+            <td class="px-4 py-3 text-content-primary font-medium">{{ item.itemName }}</td>
 
             <!-- 編輯模式 -->
             <template v-if="editingId === item.id">
               <td class="px-2 py-2">
                 <input v-model="editForm.unit" type="text"
-                  class="w-20 border border-indigo-300 rounded px-2 py-1 text-sm" />
+                  class="w-20 border border-accent rounded px-2 py-1 text-sm bg-surface-card text-content-primary" />
               </td>
               <td class="px-2 py-2">
                 <input v-model="editForm.category" type="text"
-                  class="w-24 border border-indigo-300 rounded px-2 py-1 text-sm" />
+                  class="w-24 border border-accent rounded px-2 py-1 text-sm bg-surface-card text-content-primary" />
               </td>
               <td class="px-2 py-2">
                 <div class="flex items-center gap-1">
                   <input v-model.number="editForm.normalMin" type="number" step="0.01" placeholder="min"
-                    class="w-20 border border-indigo-300 rounded px-2 py-1 text-sm" />
-                  <span class="text-gray-400">~</span>
+                    class="w-20 border border-accent rounded px-2 py-1 text-sm bg-surface-card text-content-primary" />
+                  <span class="text-content-tertiary">~</span>
                   <input v-model.number="editForm.normalMax" type="number" step="0.01" placeholder="max"
-                    class="w-20 border border-indigo-300 rounded px-2 py-1 text-sm" />
+                    class="w-20 border border-accent rounded px-2 py-1 text-sm bg-surface-card text-content-primary" />
                 </div>
               </td>
               <td class="px-4 py-2">
                 <div class="flex gap-2">
                   <button @click="handleUpdate(item.id)"
-                    class="text-indigo-600 hover:text-indigo-800 text-xs font-medium">儲存</button>
+                    class="text-accent hover:text-accent-dark text-xs font-medium">儲存</button>
                   <button @click="editingId = null"
-                    class="text-gray-400 hover:text-gray-600 text-xs">取消</button>
+                    class="text-content-tertiary hover:text-content-secondary text-xs">取消</button>
                 </div>
               </td>
             </template>
 
             <!-- 顯示模式 -->
             <template v-else>
-              <td class="px-4 py-3 text-gray-600">{{ item.unit }}</td>
-              <td class="px-4 py-3 text-gray-500">{{ item.category }}</td>
-              <td class="px-4 py-3 text-gray-500 text-xs">
+              <td class="px-4 py-3 text-content-secondary">{{ item.unit }}</td>
+              <td class="px-4 py-3 text-content-tertiary">{{ item.category }}</td>
+              <td class="px-4 py-3 text-content-tertiary text-xs font-data">
                 {{ item.normalMin ?? '-' }} ~ {{ item.normalMax ?? '-' }}
               </td>
               <td class="px-4 py-3">
                 <div class="flex gap-3">
                   <button @click="startEdit(item)"
-                    class="text-indigo-500 hover:text-indigo-700 text-xs">編輯</button>
+                    class="text-accent hover:text-accent-dark text-xs">編輯</button>
                   <button v-if="!item.isPreset" @click="handleDelete(item.id)"
-                    class="text-red-400 hover:text-red-600 text-xs">刪除</button>
+                    class="text-status-danger hover:opacity-80 text-xs">刪除</button>
                 </div>
               </td>
             </template>
           </tr>
         </tbody>
       </table>
-      <p v-if="items.length === 0" class="text-center py-12 text-gray-400">尚無檢驗項目</p>
+      <p v-if="items.length === 0" class="text-center py-12 text-content-tertiary">尚無檢驗項目</p>
     </div>
   </AppLayout>
 </template>

@@ -1,23 +1,29 @@
 <template>
-  <div class="bg-white rounded-xl shadow overflow-hidden">
-    <div class="px-4 py-3 bg-gray-50 border-b border-gray-100">
-      <h3 class="text-sm font-semibold text-gray-700">匯入歷史</h3>
+  <div class="bg-surface-card rounded-card shadow-sm overflow-hidden">
+    <div class="px-4 py-3 bg-surface-alt border-b border-border-default">
+      <h3 class="text-sm font-semibold text-content-secondary">匯入歷史</h3>
     </div>
-    <div v-if="logs.length === 0" class="text-center py-8 text-sm text-gray-400">尚無匯入紀錄</div>
+    <div v-if="logs.length === 0" class="text-center py-8 text-sm text-content-tertiary">尚無匯入紀錄</div>
     <div v-else>
-      <div v-for="log in logs" :key="log.id" class="border-t border-gray-100 first:border-0 px-4 py-3 flex items-center justify-between">
+      <div v-for="log in logs" :key="log.id" class="border-t border-border-default first:border-0 px-4 py-3 flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-gray-800">{{ formatDate(log.importedAt) }} 匯入</p>
-          <p class="text-xs text-gray-500 mt-0.5">
-            資料日期：{{ log.dataDate }} ｜
-            範圍：{{ log.dateRangeStart }} ~ {{ log.dateRangeEnd }}
+          <p class="text-sm font-medium text-content-primary">{{ formatDate(log.importedAt) }} 匯入</p>
+          <p v-if="log.fileName" class="text-xs text-content-tertiary mt-0.5">{{ log.fileName }}</p>
+          <p class="text-xs text-content-tertiary mt-0.5">
+            <template v-if="log.dataDate">資料日期：{{ log.dataDate }} ｜ </template>
+            <template v-if="log.dateRangeStart">範圍：{{ log.dateRangeStart }} ~ {{ log.dateRangeEnd }}</template>
           </p>
-          <p class="text-xs text-gray-500 mt-0.5">
-            看診 {{ log.healthRecordCount }} 筆 ／ 用藥 {{ log.medicationCount }} 項 ／ 檢驗 {{ log.labCount }} 筆
+          <p class="text-xs text-content-tertiary mt-0.5">
+            看診 <span class="font-data">{{ log.visitCount }}</span> 筆 ／
+            用藥 <span class="font-data">{{ log.medicationCount }}</span> 項 ／
+            檢驗 <span class="font-data">{{ log.labCount }}</span> 筆
+            <template v-if="log.skippedLabCount"> ／ 跳過 <span class="font-data">{{ log.skippedLabCount }}</span></template>
+            <template v-if="log.duplicateLabCount"> ／ 重複 <span class="font-data">{{ log.duplicateLabCount }}</span></template>
+            <template v-if="log.newItemCount"> ／ 新項目 <span class="font-data">{{ log.newItemCount }}</span></template>
           </p>
         </div>
         <button @click="emit('revoke', log.id)"
-          class="text-xs text-red-400 hover:text-red-600 border border-red-200 px-3 py-1 rounded-lg">
+          class="text-xs text-status-danger hover:opacity-80 border border-status-danger/30 px-3 py-1 rounded-lg">
           撤銷
         </button>
       </div>

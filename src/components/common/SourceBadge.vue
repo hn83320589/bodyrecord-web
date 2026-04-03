@@ -13,8 +13,8 @@ const label = computed(() =>
 )
 const cls = computed(() => [
   'px-2 py-0.5 rounded text-xs font-medium',
-  props.source === 'nhi_import' ? 'bg-blue-100 text-blue-700'
-  : props.source === 'healthkit' ? 'bg-green-100 text-green-700'
-  : 'bg-gray-100 text-gray-600',
+  props.source === 'nhi_import' ? 'bg-accent-light text-accent'
+  : props.source === 'healthkit' ? 'bg-status-success-bg text-status-success'
+  : 'bg-surface-alt text-content-secondary',
 ])
 </script>

@@ -1,24 +1,30 @@
 export interface NhiImportResult {
   logId: number
   importedAt: string
-  dataDate: string
-  dateRangeStart: string
-  dateRangeEnd: string
-  healthRecordCount: number
+  dataDate?: string
+  dateRangeStart?: string
+  dateRangeEnd?: string
+  recordCount: number
+  visitCount: number
   medicationCount: number
   labCount: number
-  skippedLabs: number
-  newItemCount: number  // 本次自動新增的新檢驗項目數
+  skippedLabCount: number
+  duplicateLabCount: number
+  newItemCount: number
 }
 
 export interface NhiImportLog {
   id: number
   importedAt: string
-  dataDate: string
-  dateRangeStart: string
-  dateRangeEnd: string
-  healthRecordCount: number
+  fileName?: string
+  dataDate?: string
+  dateRangeStart?: string
+  dateRangeEnd?: string
+  recordCount: number
+  visitCount: number
   medicationCount: number
   labCount: number
-  skippedLabs: number
+  skippedLabCount: number
+  duplicateLabCount: number
+  newItemCount: number
 }
