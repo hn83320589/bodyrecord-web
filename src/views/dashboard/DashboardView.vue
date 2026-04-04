@@ -56,6 +56,8 @@ import { useBloodPressureStore } from '@/stores/bloodPressure'
 import { useLabStore } from '@/stores/lab'
 import { useHealthRecordStore } from '@/stores/healthRecord'
 import { useMedicationStore } from '@/stores/medication'
+import { visitApi } from '@/api/visit'
+import type { VisitTimelineItem } from '@/types/visit'
 import { formatDate } from '@/utils/dateTime'
 import { classifyBP } from '@/utils/bpClassify'
 
@@ -68,6 +70,7 @@ const medStore = useMedicationStore()
 const category = ref('all')
 const range = ref('3m')
 const loading = ref(true)
+const visitItems = ref<VisitTimelineItem[]>([])
 
 const categoryOptions = [
   { label: '全部', value: 'all' },
@@ -179,14 +182,20 @@ const timelineItems = computed((): TimelineItem[] => {
   }
 
   if (category.value === 'all' || category.value === 'visit') {
-    for (const r of hrStore.records) {
-      const d = new Date(r.clinicDate)
+    for (const v of visitItems.value) {
+      const d = new Date(v.recordedAt)
       if (d < start) continue
+      const keyLabPreview = v.keyLabs.slice(0, 2)
+        .map(l => `${l.displayName ?? ''} ${l.value ?? ''}${l.unit ?? ''}`)
+        .filter(Boolean).join('、')
       items.push({
         date: d, day: d.getDate(), weekday: WEEKDAYS[d.getDay()],
-        title: r.primaryDiagnosis ?? '門診', badge: '回診', category: 'visit',
-        description: r.hospital ?? undefined,
-        onClick: () => router.push(`/health-records/${r.id}`),
+        title: v.primaryDiagnosis ?? v.institution ?? '門診', badge: '回診', category: 'visit',
+        value: v.bpOnDay ? `${v.bpOnDay.systolic}/${v.bpOnDay.diastolic}` : undefined,
+        unit: v.bpOnDay ? 'mmHg' : undefined,
+        description: [v.institution, keyLabPreview, `檢驗 ${v.labCount} 項 · 用藥 ${v.medicationCount} 種`]
+          .filter(Boolean).join(' · '),
+        onClick: () => router.push(`/visits/${v.visitId}`),
       })
     }
   }
@@ -218,11 +227,15 @@ const timelineItems = computed((): TimelineItem[] => {
 
 onMounted(async () => {
   loading.value = true
+  const now = new Date()
+  const start = new Date(now.getFullYear(), now.getMonth() - 12, now.getDate())
   await Promise.allSettled([
     bpStore.fetchRecords(),
     labStore.fetchGroups(),
     hrStore.fetchRecords(),
     medStore.fetchMedications(),
+    visitApi.getTimeline(start.toISOString().slice(0, 10), now.toISOString().slice(0, 10))
+      .then(data => { visitItems.value = data }),
   ])
   loading.value = false
 })
