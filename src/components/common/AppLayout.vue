@@ -33,7 +33,6 @@ const router = useRouter()
 
 const navLinks = [
   { to: '/records', label: '血壓' },
-  { to: '/stats', label: '統計' },
   { to: '/lab', label: '檢驗' },
   { to: '/lab/items', label: '項目' },
   { to: '/health-records', label: '看診' },

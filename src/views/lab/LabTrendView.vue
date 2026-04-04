@@ -1,10 +1,12 @@
 <template>
   <AppLayout>
-    <PageHeader title="檢驗趨勢" />
+    <PageHeader title="檢驗趨勢">
+      <RouterLink to="/lab" class="text-sm text-content-tertiary hover:text-content-secondary">返回列表</RouterLink>
+    </PageHeader>
     <div class="bg-surface-card rounded-card shadow-sm p-6">
       <div v-if="loadingItems" class="text-sm text-content-tertiary mb-4">載入項目中...</div>
       <div v-else class="flex gap-2 mb-6 flex-wrap">
-        <button v-for="item in userLabItems" :key="`${item.itemCode}-${item.itemName}`"
+        <button v-for="item in itemsWithData" :key="`${item.itemCode}-${item.itemName}`"
           @click="selectItem(item)"
           :class="['px-3 py-1 rounded-full text-xs font-medium transition',
             isSelected(item) ? 'bg-accent text-white' : 'bg-surface-alt text-content-secondary hover:bg-border-default']">
@@ -33,6 +35,17 @@ const store = useLabStore()
 const userLabItems = ref<UserLabItem[]>([])
 const loadingItems = ref(false)
 const selectedItem = ref<UserLabItem | null>(null)
+
+// 只顯示實際有檢驗紀錄的項目
+const itemsWithData = computed(() => {
+  const recordedKeys = new Set<string>()
+  for (const g of (Array.isArray(store.groups) ? store.groups : [])) {
+    for (const item of (Array.isArray(g.items) ? g.items : [])) {
+      recordedKeys.add(`${item.itemCode}|${item.itemName}`)
+    }
+  }
+  return userLabItems.value.filter(i => recordedKeys.has(`${i.itemCode}|${i.itemName}`))
+})
 
 function isSelected(item: UserLabItem) {
   return selectedItem.value?.itemCode === item.itemCode &&
@@ -67,7 +80,10 @@ function selectItem(item: UserLabItem) {
 onMounted(async () => {
   loadingItems.value = true
   try {
-    userLabItems.value = await userLabItemApi.getAll()
+    await Promise.allSettled([
+      userLabItemApi.getAll().then(d => { userLabItems.value = d }),
+      store.fetchGroups(),
+    ])
   } finally {
     loadingItems.value = false
   }

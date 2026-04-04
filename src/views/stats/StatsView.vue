@@ -1,6 +1,8 @@
 <template>
   <AppLayout>
-    <PageHeader title="血壓統計" />
+    <PageHeader title="血壓統計">
+      <RouterLink to="/records" class="text-sm text-content-tertiary hover:text-content-secondary">返回列表</RouterLink>
+    </PageHeader>
     <div class="bg-surface-card rounded-card shadow-sm p-6">
       <div class="flex gap-2 mb-6">
         <button v-for="opt in rangeOptions" :key="opt.value"

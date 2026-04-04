@@ -1,10 +1,14 @@
 <template>
   <AppLayout>
     <PageHeader title="血壓紀錄">
-      <RouterLink to="/records/new"
-        class="bg-accent text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-accent-dark">
-        新增紀錄
-      </RouterLink>
+      <div class="flex gap-2">
+        <RouterLink to="/stats" class="border border-accent text-accent px-4 py-2 rounded-lg text-sm font-medium hover:bg-accent-light">
+          統計圖表
+        </RouterLink>
+        <RouterLink to="/records/new" class="bg-accent text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-accent-dark">
+          新增紀錄
+        </RouterLink>
+      </div>
     </PageHeader>
     <LoadingSpinner v-if="store.loading" />
     <div v-else class="bg-surface-card rounded-card shadow-sm overflow-hidden">
