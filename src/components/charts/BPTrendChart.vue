@@ -18,12 +18,12 @@ const props = defineProps<{ points: BloodPressureChartPoint[]; loading?: boolean
 
 const option = computed(() => ({
   tooltip: { trigger: 'axis' },
-  legend: { data: ['收縮壓', '舒張壓'] },
-  grid: { left: 50, right: 20, top: 40, bottom: 36 },
+  legend: { data: ['收縮壓', '舒張壓', '脈搏'], bottom: 0 },
+  grid: { left: 50, right: 20, top: 20, bottom: 60 },
   xAxis: {
     type: 'category',
     data: props.points.map(p => formatDate(p.recordedAt, 'short')),
-    axisLabel: { rotate: 30, fontSize: 11 },
+    axisLabel: { rotate: 45, fontSize: 10, margin: 8 },
   },
   yAxis: { type: 'value', min: 40 },
   series: [
@@ -42,6 +42,14 @@ const option = computed(() => ({
       data: props.points.map(p => p.diastolic),
       itemStyle: { color: '#6366f1' },
       lineStyle: { color: '#6366f1', width: 2 },
+    },
+    {
+      name: '脈搏',
+      type: 'line',
+      smooth: true,
+      data: props.points.map(p => p.pulse),
+      itemStyle: { color: '#22c55e' },
+      lineStyle: { color: '#22c55e', width: 1.5, type: 'dashed' },
     },
   ],
 }))
