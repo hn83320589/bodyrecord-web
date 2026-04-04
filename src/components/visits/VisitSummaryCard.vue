@@ -8,9 +8,22 @@
         <span class="text-sm font-semibold text-content-primary">{{ institution ?? '未知機構' }}</span>
         <span class="text-xs text-content-tertiary">{{ formattedDate }}</span>
       </div>
-      <span class="px-2 py-0.5 rounded text-[10px] font-medium" style="background: var(--cat-visit-bg); color: var(--cat-visit)">
-        回診
-      </span>
+      <div class="flex items-center gap-2">
+        <button
+          @click.stop="handleDownloadPdf"
+          :disabled="downloadingPdf"
+          class="p-1 rounded text-content-tertiary hover:text-accent hover:bg-surface-alt transition disabled:opacity-50"
+          title="下載摘要 PDF"
+        >
+          <svg v-if="!downloadingPdf" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span v-else class="block w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin"></span>
+        </button>
+        <span class="px-2 py-0.5 rounded text-[10px] font-medium" style="background: var(--cat-visit-bg); color: var(--cat-visit)">
+          回診
+        </span>
+      </div>
     </div>
     <p v-if="primaryDiagnosis" class="text-sm text-content-secondary mt-1">{{ primaryDiagnosis }}</p>
 
@@ -36,11 +49,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { KeyLab, BloodPressureSimple } from '@/types/visit'
 import { formatDate } from '@/utils/dateTime'
+import { visitSummaryApi } from '@/api/visitSummary'
 
 const props = defineProps<{
+  visitId: number
   recordedAt: string
   institution?: string
   primaryDiagnosis?: string
@@ -50,6 +65,20 @@ const props = defineProps<{
   bpOnDay?: BloodPressureSimple
 }>()
 defineEmits<{ (e: 'click'): void }>()
+
+const downloadingPdf = ref(false)
+
+async function handleDownloadPdf() {
+  downloadingPdf.value = true
+  try {
+    await visitSummaryApi.downloadPdf(props.visitId)
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : '未知錯誤'
+    alert('PDF 下載失敗：' + message)
+  } finally {
+    downloadingPdf.value = false
+  }
+}
 
 const formattedDate = computed(() => formatDate(props.recordedAt))
 

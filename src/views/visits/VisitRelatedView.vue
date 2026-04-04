@@ -1,7 +1,14 @@
 <template>
   <AppLayout>
     <PageHeader :title="data?.visit.institution ?? '回診詳情'">
-      <RouterLink to="/visits/timeline" class="text-sm text-content-tertiary hover:text-content-secondary">返回時間軸</RouterLink>
+      <div class="flex items-center gap-3">
+        <button
+          v-if="data"
+          @click="showSummary = true"
+          class="text-sm text-accent hover:text-accent-dark font-medium transition"
+        >匯出摘要</button>
+        <RouterLink to="/visits/timeline" class="text-sm text-content-tertiary hover:text-content-secondary">返回時間軸</RouterLink>
+      </div>
     </PageHeader>
 
     <LoadingSpinner v-if="loading" />
@@ -48,11 +55,18 @@
       <!-- 血壓趨勢 -->
       <RelatedBpSection :bps="data.bloodPressures" :visit-date="data.visit.recordedAt" />
     </div>
+
+    <VisitSummaryModal
+      :open="showSummary"
+      :visit-id="Number(route.params.id)"
+      @close="showSummary = false"
+    />
   </AppLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import VisitSummaryModal from '@/components/visits/VisitSummaryModal.vue'
 import { useRoute } from 'vue-router'
 import AppLayout from '@/components/common/AppLayout.vue'
 import PageHeader from '@/components/common/PageHeader.vue'
@@ -67,6 +81,7 @@ import type { VisitRelatedResponse } from '@/types/visit'
 const route = useRoute()
 const loading = ref(false)
 const data = ref<VisitRelatedResponse | null>(null)
+const showSummary = ref(false)
 
 onMounted(async () => {
   loading.value = true

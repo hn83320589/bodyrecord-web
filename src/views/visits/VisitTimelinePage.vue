@@ -20,6 +20,7 @@
           </div>
           <div class="flex-1 mb-3">
             <VisitSummaryCard
+              :visit-id="item.visitId"
               :recorded-at="item.recordedAt"
               :institution="item.institution"
               :primary-diagnosis="item.primaryDiagnosis"
