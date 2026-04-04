@@ -38,6 +38,7 @@ const navLinks = [
   { to: '/lab/items', label: '項目' },
   { to: '/health-records', label: '看診' },
   { to: '/visits/timeline', label: '回診' },
+  { to: '/symptoms', label: '症狀' },
   { to: '/medications', label: '用藥' },
   { to: '/nhi', label: '匯入' },
 ]

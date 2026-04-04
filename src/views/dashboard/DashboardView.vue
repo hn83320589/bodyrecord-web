@@ -57,7 +57,9 @@ import { useLabStore } from '@/stores/lab'
 import { useHealthRecordStore } from '@/stores/healthRecord'
 import { useMedicationStore } from '@/stores/medication'
 import { visitApi } from '@/api/visit'
+import { symptomApi } from '@/api/symptom'
 import type { VisitTimelineItem } from '@/types/visit'
+import type { SymptomLog as SymptomLogType } from '@/types/symptom'
 import { formatDate } from '@/utils/dateTime'
 import { classifyBP } from '@/utils/bpClassify'
 
@@ -71,6 +73,7 @@ const category = ref('all')
 const range = ref('3m')
 const loading = ref(true)
 const visitItems = ref<VisitTimelineItem[]>([])
+const symptomLogs = ref<SymptomLogType[]>([])
 
 const categoryOptions = [
   { label: '全部', value: 'all' },
@@ -78,6 +81,7 @@ const categoryOptions = [
   { label: '檢驗', value: 'lab' },
   { label: '回診', value: 'visit' },
   { label: '用藥', value: 'med' },
+  { label: '症狀', value: 'symptom' },
 ]
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
@@ -213,6 +217,21 @@ const timelineItems = computed((): TimelineItem[] => {
     }
   }
 
+  if (category.value === 'all' || category.value === 'symptom') {
+    for (const s of symptomLogs.value) {
+      const d = new Date(s.loggedAt)
+      if (d < start) continue
+      items.push({
+        date: d, day: d.getDate(), weekday: WEEKDAYS[d.getDay()],
+        title: s.symptomType, badge: '症狀', category: 'visit' as const,
+        value: `嚴重度 ${s.severity}`,
+        flag: s.severity >= 7 ? '⚠' : undefined,
+        description: s.note ?? undefined,
+        onClick: () => router.push('/symptoms'),
+      })
+    }
+  }
+
   items.sort((a, b) => b.date.getTime() - a.date.getTime())
 
   let lastMonth = ''
@@ -236,6 +255,8 @@ onMounted(async () => {
     medStore.fetchMedications(),
     visitApi.getTimeline(start.toISOString().slice(0, 10), now.toISOString().slice(0, 10))
       .then(data => { visitItems.value = data }),
+    symptomApi.list({ startDate: start.toISOString().slice(0, 10), endDate: now.toISOString().slice(0, 10) })
+      .then(data => { symptomLogs.value = data }),
   ])
   loading.value = false
 })

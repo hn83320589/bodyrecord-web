@@ -36,6 +36,8 @@
   --cat-visit-bg: #FEF3C7;
   --cat-med: #8B5CF6;
   --cat-med-bg: #EDE9FE;
+  --cat-symptom: #EC4899;
+  --cat-symptom-bg: #FDF2F8;
 }
 
 .dark {
@@ -67,6 +69,8 @@
   --cat-visit-bg: #422006;
   --cat-med: #A78BFA;
   --cat-med-bg: #2E1065;
+  --cat-symptom: #F472B6;
+  --cat-symptom-bg: #500724;
 }
 
 /* ── Tailwind v4 Theme Tokens ── */
@@ -98,6 +102,8 @@
   --color-cat-visit-bg: var(--cat-visit-bg);
   --color-cat-med: var(--cat-med);
   --color-cat-med-bg: var(--cat-med-bg);
+  --color-cat-symptom: var(--cat-symptom);
+  --color-cat-symptom-bg: var(--cat-symptom-bg);
   --font-family-sans: "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-family-mono: "JetBrains Mono", "SF Mono", monospace;
   --radius-card: var(--radius-card);
