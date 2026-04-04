@@ -12,10 +12,10 @@
     <!-- Adherence stats -->
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
       <div class="bg-surface-card rounded-card shadow-sm p-4 flex items-center justify-center">
-        <AdherenceRing :rate="adherence?.overallRate ?? 0" label="服藥率" />
+        <AdherenceRing :rate="adherence?.overall?.adherenceRate ?? 0" label="服藥率" />
       </div>
-      <StatCard label="本月最佳" :value="adherence?.bestMedication ?? '-'" />
-      <StatCard label="本月最差" :value="adherence?.worstMedication ?? '-'" />
+      <StatCard label="本月最佳" :value="bestMed" />
+      <StatCard label="本月最差" :value="worstMed" />
     </div>
 
     <!-- Reminder list -->
@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import AppLayout from '@/components/common/AppLayout.vue'
 import PageHeader from '@/components/common/PageHeader.vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
@@ -59,6 +59,17 @@ const adherence = ref<AdherenceResponse | null>(null)
 const loadingReminders = ref(false)
 const showForm = ref(false)
 const editingReminder = ref<MedicationReminder | null>(null)
+
+const bestMed = computed(() => {
+  const meds = adherence.value?.byMedication ?? []
+  if (meds.length === 0) return '-'
+  return meds.reduce((a, b) => a.adherenceRate > b.adherenceRate ? a : b).medicationName
+})
+const worstMed = computed(() => {
+  const meds = adherence.value?.byMedication ?? []
+  if (meds.length === 0) return '-'
+  return meds.reduce((a, b) => a.adherenceRate < b.adherenceRate ? a : b).medicationName
+})
 
 function openForm(r: MedicationReminder | null) {
   editingReminder.value = r

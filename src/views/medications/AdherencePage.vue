@@ -8,7 +8,7 @@
     <div v-else-if="data" class="space-y-6 max-w-3xl">
       <!-- Overall ring -->
       <div class="bg-surface-card rounded-card shadow-sm p-6 flex justify-center">
-        <AdherenceRing :rate="data.overallRate" :size="160" :stroke-width="14" label="整體服藥率" />
+        <AdherenceRing :rate="data.overall.adherenceRate" :size="160" :stroke-width="14" label="整體服藥率" />
       </div>
 
       <!-- By medication -->
@@ -18,10 +18,10 @@
           <div v-for="m in data.byMedication" :key="m.medicationName" class="flex items-center gap-3">
             <span class="text-sm text-content-primary flex-1">{{ m.medicationName }}</span>
             <div class="w-32 h-2 bg-surface-alt rounded-full overflow-hidden">
-              <div class="h-full rounded-full" :style="{ width: `${m.rate * 100}%`, backgroundColor: rateColor(m.rate) }"></div>
+              <div class="h-full rounded-full" :style="{ width: `${m.adherenceRate * 100}%`, backgroundColor: rateColor(m.adherenceRate) }"></div>
             </div>
-            <span class="text-xs font-data w-10 text-right" :style="{ color: rateColor(m.rate) }">
-              {{ Math.round(m.rate * 100) }}%
+            <span class="text-xs font-data w-10 text-right" :style="{ color: rateColor(m.adherenceRate) }">
+              {{ Math.round(m.adherenceRate * 100) }}%
             </span>
           </div>
         </div>

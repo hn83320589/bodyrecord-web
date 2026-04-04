@@ -138,7 +138,7 @@ watch(() => props.editing, (r) => {
     form.dosage = r.dosage ?? ''
     form.frequency = r.frequency ?? ''
     form.remindTimes = [...r.remindTimes]
-    form.daysOfWeek = [...r.daysOfWeek]
+    form.daysOfWeek = r.daysOfWeek ? r.daysOfWeek.split(',') : ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
     form.startDate = r.startDate ?? ''
     form.endDate = r.endDate ?? ''
   } else {
@@ -161,7 +161,7 @@ async function handleSubmit() {
       dosage: form.dosage || undefined,
       frequency: form.frequency || undefined,
       remindTimes: form.remindTimes,
-      daysOfWeek: form.daysOfWeek,
+      daysOfWeek: form.daysOfWeek.join(','),
       startDate: form.startDate || undefined,
       endDate: form.endDate || undefined,
     }

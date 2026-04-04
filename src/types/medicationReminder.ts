@@ -1,39 +1,40 @@
+// ── Reminder ────────────────────────────────
+
 export interface MedicationReminder {
   id: number
   medicationDetailId?: number
   medicationName: string
   dosage?: string
   frequency?: string
-  remindTimes: string[]    // parsed from JSON
-  daysOfWeek: string[]     // parsed from comma-separated
+  remindTimes: string[]      // 後端回傳 List<string>
+  daysOfWeek: string         // 後端回傳 comma-separated string "MON,TUE,..."
   startDate?: string
   endDate?: string
   isEnabled: boolean
   createdAt: string
-  updatedAt: string
 }
 
 export interface CreateMedicationReminderRequest {
   medicationName: string
   dosage?: string
   frequency?: string
-  remindTimes: string[]
-  daysOfWeek: string[]
+  remindTimes?: string[]
+  daysOfWeek?: string        // comma-separated
   startDate?: string
   endDate?: string
-  isEnabled?: boolean
 }
 
 export interface UpdateMedicationReminderRequest {
   medicationName?: string
   dosage?: string
-  frequency?: string
   remindTimes?: string[]
-  daysOfWeek?: string[]
+  daysOfWeek?: string        // comma-separated
   startDate?: string
   endDate?: string
   isEnabled?: boolean
 }
+
+// ── Medication Log ──────────────────────────
 
 export interface MedicationLog {
   id: number
@@ -44,30 +45,36 @@ export interface MedicationLog {
   takenAt?: string
   status: 'pending' | 'taken' | 'late' | 'skipped' | 'missed'
   note?: string
-  createdAt: string
 }
+
+// ── Adherence ───────────────────────────────
 
 export interface AdherenceResponse {
-  overallRate: number
-  takenCount: number
-  lateCount: number
-  skippedCount: number
-  missedCount: number
-  totalCount: number
-  bestMedication?: string
-  worstMedication?: string
-  byMedication: MedicationAdherence[]
-  dailyTrend: DailyAdherence[]
+  period: { start: string; end: string }
+  overall: AdherenceOverall
+  byMedication: AdherenceByMed[]
+  dailyTrend: AdherenceDaily[]
 }
 
-export interface MedicationAdherence {
+export interface AdherenceOverall {
+  totalScheduled: number
+  taken: number
+  late: number
+  skipped: number
+  missed: number
+  adherenceRate: number      // 0-1
+}
+
+export interface AdherenceByMed {
   medicationName: string
-  rate: number
-  takenCount: number
-  totalCount: number
+  totalScheduled: number
+  taken: number
+  adherenceRate: number      // 0-1
 }
 
-export interface DailyAdherence {
+export interface AdherenceDaily {
   date: string
-  rate: number
+  scheduled: number
+  taken: number
+  rate: number               // 0-1
 }
