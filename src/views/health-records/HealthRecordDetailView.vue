@@ -13,7 +13,7 @@
     <div v-else-if="detail" class="space-y-6">
       <!-- Basic Info -->
       <div class="bg-surface-card rounded-card shadow-sm p-6">
-        <div class="grid grid-cols-2 gap-4 text-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div><span class="text-content-tertiary">日期：</span><span class="text-content-primary">{{ formatDate(detail.recordedAt) }}</span></div>
           <div><span class="text-content-tertiary">機構：</span><span class="text-content-primary">{{ detail.nhiInstitution ?? '-' }}</span></div>
           <div><span class="text-content-tertiary">類型：</span><span class="text-content-primary">{{ detail.recordType ?? '-' }}</span></div>
@@ -36,25 +36,27 @@
       <!-- Lab Results -->
       <div v-if="detail.labResults && detail.labResults.length > 0" class="bg-surface-card rounded-card shadow-sm p-6">
         <h3 class="text-sm font-semibold text-content-secondary mb-3">檢驗結果</h3>
-        <table class="w-full text-sm">
-          <tbody>
-            <tr v-for="item in detail.labResults" :key="item.id" class="border-t border-border-default first:border-0">
-              <td class="py-2 text-content-secondary">{{ item.itemName }}</td>
-              <td class="py-2 font-data">
-                <LabValueBadge
-                  :is-numeric="item.isNumeric"
-                  :value-numeric="item.valueNumeric"
-                  :value-text="item.valueText"
-                  :unit="item.unit"
-                  :normal-min="item.normalMin"
-                  :normal-max="item.normalMax"
-                  :is-abnormal="item.isAbnormal"
-                />
-              </td>
-              <td class="py-2 text-content-tertiary text-xs font-data">{{ item.normalMin ?? '-' }} ~ {{ item.normalMax ?? '-' }} {{ item.unit }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <tbody>
+              <tr v-for="item in detail.labResults" :key="item.id" class="border-t border-border-default first:border-0">
+                <td class="py-2 text-content-secondary max-w-[200px] truncate">{{ item.itemName }}</td>
+                <td class="py-2 font-data">
+                  <LabValueBadge
+                    :is-numeric="item.isNumeric"
+                    :value-numeric="item.valueNumeric"
+                    :value-text="item.valueText"
+                    :unit="item.unit"
+                    :normal-min="item.normalMin"
+                    :normal-max="item.normalMax"
+                    :is-abnormal="item.isAbnormal"
+                  />
+                </td>
+                <td class="py-2 text-content-tertiary text-xs font-data whitespace-nowrap">{{ item.normalMin ?? '-' }} ~ {{ item.normalMax ?? '-' }} {{ item.unit }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </AppLayout>

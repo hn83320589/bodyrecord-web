@@ -64,7 +64,7 @@
         </div>
 
         <!-- Date range -->
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="text-xs text-content-tertiary mb-1 block">開始日期</label>
             <input v-model="form.startDate" type="date"

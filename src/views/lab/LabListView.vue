@@ -17,32 +17,34 @@
           <span class="font-medium text-content-primary">{{ group.date }}</span>
           <SourceBadge v-if="group.items[0]" :source="group.items[0].source" />
         </div>
-        <table class="w-full text-sm">
-          <tbody>
-            <tr v-for="item in group.items" :key="item.id" class="border-t border-border-default first:border-0">
-              <td class="px-4 py-2 text-content-secondary w-1/4">{{ item.itemName }}</td>
-              <td class="px-4 py-2 text-content-tertiary w-1/4">{{ item.category }}</td>
-              <td class="px-4 py-2 w-1/4 font-data">
-                <LabValueBadge
-                  :is-numeric="item.isNumeric"
-                  :value-numeric="item.valueNumeric"
-                  :value-text="item.valueText"
-                  :unit="item.unit"
-                  :normal-min="item.normalMin"
-                  :normal-max="item.normalMax"
-                  :is-abnormal="item.isAbnormal"
-                />
-              </td>
-              <td class="px-4 py-2 text-content-tertiary text-xs font-data">
-                參考值：{{ item.normalMin ?? '-' }} ~ {{ item.normalMax ?? '-' }} {{ item.unit }}
-              </td>
-              <td class="px-4 py-2">
-                <button v-if="item.source === 'manual'" @click="deleteItem(item.id)"
-                  class="text-status-danger hover:opacity-80 text-xs">刪除</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <tbody>
+              <tr v-for="item in group.items" :key="item.id" class="border-t border-border-default first:border-0">
+                <td class="px-4 py-2 text-content-secondary w-1/4 max-w-[200px] truncate">{{ item.itemName }}</td>
+                <td class="px-4 py-2 text-content-tertiary w-1/4">{{ item.category }}</td>
+                <td class="px-4 py-2 w-1/4 font-data">
+                  <LabValueBadge
+                    :is-numeric="item.isNumeric"
+                    :value-numeric="item.valueNumeric"
+                    :value-text="item.valueText"
+                    :unit="item.unit"
+                    :normal-min="item.normalMin"
+                    :normal-max="item.normalMax"
+                    :is-abnormal="item.isAbnormal"
+                  />
+                </td>
+                <td class="px-4 py-2 text-content-tertiary text-xs font-data whitespace-nowrap">
+                  參考值：{{ item.normalMin ?? '-' }} ~ {{ item.normalMax ?? '-' }} {{ item.unit }}
+                </td>
+                <td class="px-4 py-2">
+                  <button v-if="item.source === 'manual'" @click="deleteItem(item.id)"
+                    class="text-status-danger hover:opacity-80 text-xs">刪除</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <p v-if="store.groups.length === 0" class="text-center py-12 text-content-tertiary">尚無檢驗紀錄</p>
     </div>

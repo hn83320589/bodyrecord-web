@@ -6,7 +6,7 @@
       <!-- Basic Info -->
       <div class="bg-surface-card rounded-card shadow-sm p-6">
         <h3 class="text-sm font-semibold text-content-secondary mb-4">基本資料</h3>
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-xs text-content-tertiary mb-1">顯示名稱</label>
             <input v-model="form.displayName" type="text"
@@ -75,7 +75,7 @@
             <button @click="deleteContact(c.id)" class="text-status-danger hover:opacity-80 text-xs">移除</button>
           </div>
         </div>
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <input v-model="newContact.name" type="text" placeholder="姓名"
             class="border border-border-default rounded-lg px-3 py-2 text-sm bg-surface-card text-content-primary" />
           <input v-model="newContact.relationship" type="text" placeholder="關係"

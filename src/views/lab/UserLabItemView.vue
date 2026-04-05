@@ -7,7 +7,7 @@
     <!-- 新增自訂項目 -->
     <div class="bg-surface-card rounded-card shadow-sm p-6 mb-6">
       <h3 class="text-sm font-semibold text-content-secondary mb-4">新增自訂項目</h3>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         <div>
           <label class="block text-xs text-content-tertiary mb-1">申報代碼</label>
           <input v-model="newItem.itemCode" type="text" placeholder="如：09015C"
@@ -49,6 +49,7 @@
     <!-- 項目列表 -->
     <LoadingSpinner v-if="loading" />
     <div v-else class="bg-surface-card rounded-card shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
       <table class="w-full text-sm">
         <thead class="bg-surface-alt">
           <tr>
@@ -116,6 +117,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
       <p v-if="items.length === 0" class="text-center py-12 text-content-tertiary">尚無檢驗項目</p>
     </div>
   </AppLayout>

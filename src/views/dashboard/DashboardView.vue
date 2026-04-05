@@ -24,7 +24,7 @@
     </div>
 
     <!-- Filters -->
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
       <CategoryPills v-model="category" :options="categoryOptions" />
       <DateRangePicker v-model="range" />
     </div>

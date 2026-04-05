@@ -6,11 +6,11 @@
 
     <div v-for="group in lab.byCategory" :key="group.category" class="mb-4">
       <p class="text-xs font-semibold text-content-secondary mb-1 px-1">{{ group.category }}</p>
-      <div class="bg-surface-card border border-border-default rounded-card overflow-hidden">
+      <div class="bg-surface-card border border-border-default rounded-card overflow-hidden overflow-x-auto">
         <div
           v-for="(item, i) in group.items"
           :key="i"
-          class="flex items-center gap-3 px-4 py-2 text-sm border-b border-border-default last:border-b-0"
+          class="flex items-center gap-3 px-4 py-2 text-sm border-b border-border-default last:border-b-0 min-w-0"
           :class="isAbnormal(item.status) ? 'bg-status-danger-bg' : ''"
         >
           <span class="flex-1 text-content-primary">{{ item.displayName ?? '-' }}</span>

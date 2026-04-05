@@ -12,33 +12,35 @@
     </PageHeader>
     <LoadingSpinner v-if="store.loading" />
     <div v-else class="bg-surface-card rounded-card shadow-sm overflow-hidden">
-      <table class="w-full text-sm">
-        <thead class="bg-surface-alt">
-          <tr>
-            <th class="text-left px-4 py-3 text-content-secondary font-medium">時間</th>
-            <th class="text-left px-4 py-3 text-content-secondary font-medium">血壓</th>
-            <th class="text-left px-4 py-3 text-content-secondary font-medium">脈搏</th>
-            <th class="text-left px-4 py-3 text-content-secondary font-medium">來源</th>
-            <th class="text-left px-4 py-3 text-content-secondary font-medium">備註</th>
-            <th class="px-4 py-3"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="r in store.records" :key="r.id" class="border-t border-border-default">
-            <td class="px-4 py-3 text-content-secondary">{{ formatDateTime(r.recordedAt) }}</td>
-            <td class="px-4 py-3 font-medium font-data" :class="bpColor(r.systolic, r.diastolic)">
-              {{ r.systolic }}/{{ r.diastolic }}
-            </td>
-            <td class="px-4 py-3 text-content-secondary font-data">{{ r.pulse ?? '-' }}</td>
-            <td class="px-4 py-3"><SourceBadge :source="r.source" /></td>
-            <td class="px-4 py-3 text-content-tertiary">{{ r.note ?? '-' }}</td>
-            <td class="px-4 py-3">
-              <button @click="deleteRecord(r.id)"
-                class="text-status-danger hover:opacity-80 text-xs">刪除</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-surface-alt">
+            <tr>
+              <th class="text-left px-4 py-3 text-content-secondary font-medium">時間</th>
+              <th class="text-left px-4 py-3 text-content-secondary font-medium">血壓</th>
+              <th class="text-left px-4 py-3 text-content-secondary font-medium">脈搏</th>
+              <th class="text-left px-4 py-3 text-content-secondary font-medium">來源</th>
+              <th class="text-left px-4 py-3 text-content-secondary font-medium">備註</th>
+              <th class="px-4 py-3"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="r in store.records" :key="r.id" class="border-t border-border-default">
+              <td class="px-4 py-3 text-content-secondary whitespace-nowrap">{{ formatDateTime(r.recordedAt) }}</td>
+              <td class="px-4 py-3 font-medium font-data whitespace-nowrap" :class="bpColor(r.systolic, r.diastolic)">
+                {{ r.systolic }}/{{ r.diastolic }}
+              </td>
+              <td class="px-4 py-3 text-content-secondary font-data">{{ r.pulse ?? '-' }}</td>
+              <td class="px-4 py-3"><SourceBadge :source="r.source" /></td>
+              <td class="px-4 py-3 text-content-tertiary max-w-[200px] truncate">{{ r.note ?? '-' }}</td>
+              <td class="px-4 py-3">
+                <button @click="deleteRecord(r.id)"
+                  class="text-status-danger hover:opacity-80 text-xs">刪除</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <p v-if="store.records.length === 0" class="text-center py-12 text-content-tertiary">尚無紀錄</p>
     </div>
   </AppLayout>

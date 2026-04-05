@@ -5,7 +5,7 @@
     </PageHeader>
     <div class="bg-surface-card rounded-card shadow-sm p-6 max-w-lg">
       <form @submit.prevent="handleSubmit" class="space-y-4">
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-content-secondary mb-1">收縮壓 (mmHg)</label>
             <input v-model.number="form.systolic" type="number" required min="60" max="250"

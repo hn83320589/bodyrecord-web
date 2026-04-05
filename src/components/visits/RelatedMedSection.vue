@@ -7,19 +7,21 @@
 
     <div v-if="meds.length === 0" class="text-sm text-content-tertiary">無用藥資料</div>
 
-    <table v-else class="w-full text-sm">
-      <tbody>
-        <tr v-for="med in meds" :key="med.id" class="border-t border-border-default first:border-0">
-          <td class="py-2 text-content-primary">{{ med.medicationName }}</td>
-          <td class="py-2 text-content-tertiary text-right font-data">
-            {{ med.quantity ?? '-' }}
-          </td>
-          <td v-if="hasCopayment" class="py-2 text-content-tertiary text-right w-20 font-data">
-            {{ med.copayment != null ? `$${med.copayment}` : '' }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div v-else class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <tbody>
+          <tr v-for="med in meds" :key="med.id" class="border-t border-border-default first:border-0">
+            <td class="py-2 text-content-primary max-w-[200px] truncate">{{ med.medicationName }}</td>
+            <td class="py-2 text-content-tertiary text-right font-data whitespace-nowrap">
+              {{ med.quantity ?? '-' }}
+            </td>
+            <td v-if="hasCopayment" class="py-2 text-content-tertiary text-right w-20 font-data">
+              {{ med.copayment != null ? `$${med.copayment}` : '' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 

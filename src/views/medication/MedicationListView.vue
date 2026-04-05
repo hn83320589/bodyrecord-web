@@ -13,20 +13,22 @@
           <span class="text-sm font-semibold text-content-primary">{{ group.date }}</span>
           <span class="text-xs text-content-tertiary">{{ group.items.length }} 項</span>
         </div>
-        <table class="w-full text-sm">
-          <tbody>
-            <tr v-for="m in group.items" :key="m.id" class="border-t border-border-default first:border-0">
-              <td class="px-4 py-2.5 text-content-primary" style="min-width:200px">{{ m.medicationName }}</td>
-              <td class="px-4 py-2.5 text-content-secondary font-data text-right whitespace-nowrap">{{ m.quantity ?? '-' }}</td>
-              <td class="px-4 py-2.5 text-content-tertiary text-right whitespace-nowrap">{{ m.durationDays ? `${m.durationDays} 天` : '-' }}</td>
-              <td class="px-3 py-2.5 whitespace-nowrap"><SourceBadge :source="m.source" /></td>
-              <td class="px-3 py-2.5 whitespace-nowrap">
-                <button v-if="m.source === 'nhi_import'" @click="deleteMed(m.id)"
-                  class="text-status-danger hover:opacity-80 text-xs">刪除</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <tbody>
+              <tr v-for="m in group.items" :key="m.id" class="border-t border-border-default first:border-0">
+                <td class="px-4 py-2.5 text-content-primary max-w-[200px] truncate">{{ m.medicationName }}</td>
+                <td class="px-4 py-2.5 text-content-secondary font-data text-right whitespace-nowrap">{{ m.quantity ?? '-' }}</td>
+                <td class="px-4 py-2.5 text-content-tertiary text-right whitespace-nowrap">{{ m.durationDays ? `${m.durationDays} 天` : '-' }}</td>
+                <td class="px-3 py-2.5 whitespace-nowrap"><SourceBadge :source="m.source" /></td>
+                <td class="px-3 py-2.5 whitespace-nowrap">
+                  <button v-if="m.source === 'nhi_import'" @click="deleteMed(m.id)"
+                    class="text-status-danger hover:opacity-80 text-xs">刪除</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <p v-else class="text-center py-12 text-content-tertiary">尚無用藥紀錄</p>
