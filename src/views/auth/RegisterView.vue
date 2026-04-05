@@ -5,7 +5,7 @@
       <form @submit.prevent="handleRegister" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-content-secondary mb-1">姓名</label>
-          <input v-model="form.name" type="text" required
+          <input v-model="form.displayName" type="text" required
             class="w-full border border-border-default rounded-lg px-3 py-2 text-sm bg-surface-card text-content-primary focus:outline-none focus:ring-2 focus:ring-accent" />
         </div>
         <div>
@@ -39,7 +39,7 @@ import { useAuthStore } from '@/stores/auth'
 const router = useRouter()
 const authStore = useAuthStore()
 
-const form = ref({ name: '', email: '', password: '' })
+const form = ref({ displayName: '', email: '', password: '' })
 const loading = ref(false)
 const error = ref('')
 
