@@ -75,8 +75,12 @@ import { visitApi } from '@/api/visit'
 import { symptomApi } from '@/api/symptom'
 import { medicationLogApi } from '@/api/medicationLog'
 import type { VisitTimelineItem } from '@/types/visit'
-import type { SymptomLog as SymptomLogType } from '@/types/symptom'
-import type { MedicationLog as MedLogType } from '@/types/medicationReminder'
+import type { SymptomLog } from '@/types/symptom'
+import type { MedicationLog } from '@/types/medicationReminder'
+import type { BloodPressureRecord } from '@/types/bloodPressure'
+import type { LabResultGroup, LabResultDetail } from '@/types/lab'
+import type { HealthRecord } from '@/types/healthRecord'
+import type { MedicationRecord } from '@/types/medication'
 import { formatDate } from '@/utils/dateTime'
 import { classifyBP } from '@/utils/bpClassify'
 
@@ -90,15 +94,15 @@ const category = ref('all')
 const range = ref('3m')
 const loading = ref(true)
 const visitItems = ref<VisitTimelineItem[]>([])
-const symptomLogs = ref<SymptomLogType[]>([])
-const todayMedLogs = ref<MedLogType[]>([])
+const symptomLogs = ref<SymptomLog[]>([])
+const todayMedLogs = ref<MedicationLog[]>([])
 
-const todayMedTaken = computed(() => todayMedLogs.value.filter(l => l.status === 'taken' || l.status === 'late').length)
+const todayMedTaken = computed(() => todayMedLogs.value.filter((l: MedicationLog) => l.status === 'taken' || l.status === 'late').length)
 const todayMedTotal = computed(() => todayMedLogs.value.length)
 const todayMedNext = computed(() => {
   const pending = todayMedLogs.value
-    .filter(l => l.status === 'pending')
-    .sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime())
+    .filter((l: MedicationLog) => l.status === 'pending')
+    .sort((a: MedicationLog, b: MedicationLog) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime())
   if (pending.length === 0) return ''
   const d = new Date(pending[0].scheduledAt)
   return `${String(d.getUTCHours()).padStart(2, '0')}:${String(d.getUTCMinutes()).padStart(2, '0')} ${pending[0].medicationName}`
@@ -115,45 +119,49 @@ const categoryOptions = [
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
 
-const bpRecords = computed(() => asArray(bpStore.records))
-const labGroups = computed(() => asArray(labStore.groups))
-const hrRecords = computed(() => asArray(hrStore.records))
+// 安全取陣列 — 帶明確型別避免 TS18046
+function safeRecords<T>(v: T[]): T[] { return Array.isArray(v) ? v : [] }
 
 const avgBp = computed(() => {
-  if (bpRecords.value.length === 0) return null
+  const recs = safeRecords<BloodPressureRecord>(bpStore.records)
+  if (recs.length === 0) return null
   const avg = (arr: number[]) => Math.round(arr.reduce((a, b) => a + b, 0) / arr.length)
-  return `${avg(bpRecords.value.map(r => r.systolic))}/${avg(bpRecords.value.map(r => r.diastolic))}`
+  return `${avg(recs.map((r: BloodPressureRecord) => r.systolic))}/${avg(recs.map((r: BloodPressureRecord) => r.diastolic))}`
 })
-const bpSub = computed(() => bpRecords.value.length > 0 ? `共 ${bpRecords.value.length} 筆` : '')
+const bpSub = computed(() => {
+  const recs = safeRecords<BloodPressureRecord>(bpStore.records)
+  return recs.length > 0 ? `共 ${recs.length} 筆` : ''
+})
 
 const latestCr = computed(() => {
-  const crItems = labGroups.value
-    .flatMap(g => asArray(g.items))
-    .filter(i => i.itemCode?.includes('09015C') || i.itemName?.includes('肌酸酐') || i.itemName?.includes('CRE'))
+  const crItems = safeRecords<LabResultGroup>(labStore.groups)
+    .flatMap((g: LabResultGroup) => safeRecords<LabResultDetail>(g.items))
+    .filter((i: LabResultDetail) => i.itemCode?.includes('09015C') || i.itemName?.includes('肌酸酐') || i.itemName?.includes('CRE'))
   return crItems.length > 0 ? crItems[0].valueNumeric : null
 })
 const crSub = computed(() => {
-  const crItems = labGroups.value.flatMap(g => asArray(g.items))
-    .filter(i => i.itemCode?.includes('09015C') || i.itemName?.includes('肌酸酐') || i.itemName?.includes('CRE'))
+  const crItems = safeRecords<LabResultGroup>(labStore.groups)
+    .flatMap((g: LabResultGroup) => safeRecords<LabResultDetail>(g.items))
+    .filter((i: LabResultDetail) => i.itemCode?.includes('09015C') || i.itemName?.includes('肌酸酐') || i.itemName?.includes('CRE'))
   return crItems.length > 0 ? formatDate(crItems[0].recordedAt) : ''
 })
 
 const monthCount = computed(() => {
   const now = new Date()
   const thisMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
-  return bpRecords.value.filter(r => r.recordedAt.startsWith(thisMonth)).length
+  return safeRecords<BloodPressureRecord>(bpStore.records).filter((r: BloodPressureRecord) => r.recordedAt.startsWith(thisMonth)).length
 })
 
 const nextVisit = computed(() => {
-  const future = hrRecords.value.filter(r => new Date(r.clinicDate) > new Date())
+  const future = safeRecords<HealthRecord>(hrStore.records).filter((r: HealthRecord) => new Date(r.clinicDate) > new Date())
   if (future.length === 0) return '-'
-  const next = future.sort((a, b) => new Date(a.clinicDate).getTime() - new Date(b.clinicDate).getTime())[0]
+  const next = future.sort((a: HealthRecord, b: HealthRecord) => new Date(a.clinicDate).getTime() - new Date(b.clinicDate).getTime())[0]
   return formatDate(next.clinicDate)
 })
 const nextVisitHospital = computed(() => {
-  const future = hrRecords.value.filter(r => new Date(r.clinicDate) > new Date())
+  const future = safeRecords<HealthRecord>(hrStore.records).filter((r: HealthRecord) => new Date(r.clinicDate) > new Date())
   if (future.length === 0) return ''
-  return future.sort((a, b) => new Date(a.clinicDate).getTime() - new Date(b.clinicDate).getTime())[0].hospital ?? ''
+  return future.sort((a: HealthRecord, b: HealthRecord) => new Date(a.clinicDate).getTime() - new Date(b.clinicDate).getTime())[0].hospital ?? ''
 })
 
 const rangeStart = computed(() => {
@@ -179,15 +187,12 @@ interface TimelineItem {
   onClick?: () => void
 }
 
-// 安全取陣列（API 可能回傳 {} 或 null）
-const asArray = <T>(v: unknown): T[] => Array.isArray(v) ? v : []
-
 const timelineItems = computed((): TimelineItem[] => {
   const items: Omit<TimelineItem, 'showMonth' | 'monthLabel'>[] = []
   const start = rangeStart.value
 
   if (category.value === 'all' || category.value === 'bp') {
-    for (const r of asArray(bpStore.records)) {
+    for (const r of safeRecords<BloodPressureRecord>(bpStore.records)) {
       const d = new Date(r.recordedAt)
       if (d < start) continue
       const cat = classifyBP(r.systolic, r.diastolic)
@@ -203,16 +208,17 @@ const timelineItems = computed((): TimelineItem[] => {
   }
 
   if (category.value === 'all' || category.value === 'lab') {
-    for (const g of asArray(labStore.groups)) {
+    for (const g of safeRecords<LabResultGroup>(labStore.groups)) {
       const d = new Date(g.date)
       if (d < start) continue
-      const abnormal = g.items.filter(i => i.isAbnormal)
+      const groupItems = safeRecords<LabResultDetail>(g.items)
+      const abnormal = groupItems.filter((i: LabResultDetail) => i.isAbnormal)
       items.push({
         date: d, day: d.getDate(), weekday: WEEKDAYS[d.getDay()],
-        title: g.items[0]?.category ?? '檢驗紀錄', badge: '檢驗', category: 'lab',
+        title: groupItems[0]?.category ?? '檢驗紀錄', badge: '檢驗', category: 'lab',
         value: abnormal.length > 0
           ? `${abnormal[0].itemName} ${abnormal[0].valueNumeric ?? abnormal[0].valueText ?? ''}`
-          : `${g.items.length} 項`,
+          : `${groupItems.length} 項`,
         unit: abnormal.length > 0 ? abnormal[0].unit : undefined,
         flag: abnormal.length > 0 ? '↑' : undefined,
         description: abnormal.length > 1 ? `另有 ${abnormal.length - 1} 項異常` : undefined,
@@ -222,11 +228,11 @@ const timelineItems = computed((): TimelineItem[] => {
   }
 
   if (category.value === 'all' || category.value === 'visit') {
-    for (const v of asArray(visitItems.value)) {
+    for (const v of safeRecords<VisitTimelineItem>(visitItems.value)) {
       const d = new Date(v.recordedAt)
       if (d < start) continue
       const keyLabPreview = v.keyLabs.slice(0, 2)
-        .map(l => `${l.displayName ?? ''} ${l.value ?? ''}${l.unit ?? ''}`)
+        .map((l) => `${l.displayName ?? ''} ${l.value ?? ''}${l.unit ?? ''}`)
         .filter(Boolean).join('、')
       items.push({
         date: d, day: d.getDate(), weekday: WEEKDAYS[d.getDay()],
@@ -241,7 +247,7 @@ const timelineItems = computed((): TimelineItem[] => {
   }
 
   if (category.value === 'all' || category.value === 'med') {
-    for (const m of asArray(medStore.medications)) {
+    for (const m of safeRecords<MedicationRecord>(medStore.medications)) {
       const d = new Date(m.recordedAt)
       if (d < start) continue
       items.push({
@@ -254,7 +260,7 @@ const timelineItems = computed((): TimelineItem[] => {
   }
 
   if (category.value === 'all' || category.value === 'symptom') {
-    for (const s of asArray(symptomLogs.value)) {
+    for (const s of safeRecords<SymptomLog>(symptomLogs.value)) {
       const d = new Date(s.loggedAt)
       if (d < start) continue
       items.push({
