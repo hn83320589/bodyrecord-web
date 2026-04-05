@@ -9,7 +9,7 @@ interface PagedResult<T> {
 }
 
 export const medicationApi = {
-  list: (params?: { page?: number; pageSize?: number; drugType?: string }): Promise<PagedResult<MedicationRecord>> =>
-    client.get('/medications', { params }),
+  list: (params?: { page?: number; pageSize?: number }): Promise<PagedResult<MedicationRecord>> =>
+    client.get('/medications', { params: { pageSize: 200, ...params } }),
   delete: (id: number): Promise<void> => client.delete(`/medications/${id}`),
 }

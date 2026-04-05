@@ -7,11 +7,11 @@ export const useMedicationStore = defineStore('medication', () => {
   const medications = ref<MedicationRecord[]>([])
   const loading = ref(false)
 
-  async function fetchMedications(drugType?: string) {
+  async function fetchMedications() {
     loading.value = true
     try {
-      const result = await medicationApi.list({ drugType, pageSize: 200 })
-      medications.value = result.items
+      const result = await medicationApi.list()
+      medications.value = Array.isArray(result) ? result : (result.items ?? [])
     } finally {
       loading.value = false
     }

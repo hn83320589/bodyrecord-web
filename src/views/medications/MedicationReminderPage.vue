@@ -1,9 +1,12 @@
 <template>
   <AppLayout>
     <PageHeader title="服藥提醒">
-      <button @click="openForm(null)" class="bg-accent text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-accent-dark">
-        + 新增提醒
-      </button>
+      <div class="flex gap-2">
+        <RouterLink to="/medications" class="text-sm text-content-tertiary hover:text-content-secondary">返回用藥</RouterLink>
+        <button @click="openForm(null)" class="bg-accent text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-accent-dark">
+          + 新增提醒
+        </button>
+      </div>
     </PageHeader>
 
     <!-- Today's medications -->

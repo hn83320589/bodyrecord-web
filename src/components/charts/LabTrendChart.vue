@@ -39,12 +39,12 @@ const option = computed(() => {
         return `<b>${date}</b><br/>${lines.join('<br/>')}`
       },
     },
-    legend: { data: props.trends.map(t => `${t.itemCode}（${t.unit}）`) },
-    grid: { left: 50, right: 20, top: 40, bottom: 36 },
+    legend: { data: props.trends.map(t => `${t.itemCode}（${t.unit}）`), bottom: 0 },
+    grid: { left: 50, right: 20, top: 20, bottom: 60 },
     xAxis: {
       type: 'category',
       data: allDates.map(d => formatDate(d, 'short')),
-      axisLabel: { rotate: 30, fontSize: 11 },
+      axisLabel: { rotate: 45, fontSize: 10, margin: 8 },
     },
     yAxis: { type: 'value' },
     series: props.trends.map((t, i) => ({

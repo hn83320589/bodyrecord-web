@@ -6,19 +6,19 @@
       <table class="w-full text-sm">
         <thead class="bg-surface-alt">
           <tr>
-            <th class="text-left px-4 py-3 text-content-secondary font-medium">就醫日期</th>
-            <th class="text-left px-4 py-3 text-content-secondary font-medium">醫院</th>
-            <th class="text-left px-4 py-3 text-content-secondary font-medium">主診斷</th>
+            <th class="text-left px-4 py-3 text-content-secondary font-medium">日期</th>
+            <th class="text-left px-4 py-3 text-content-secondary font-medium">類型</th>
+            <th class="text-left px-4 py-3 text-content-secondary font-medium">機構</th>
             <th class="text-left px-4 py-3 text-content-secondary font-medium">來源</th>
             <th class="px-4 py-3"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="r in store.records" :key="r.id" class="border-t border-border-default hover:bg-surface-alt">
-            <td class="px-4 py-3 text-content-secondary">{{ formatDate(r.clinicDate) }}</td>
-            <td class="px-4 py-3 text-content-secondary">{{ r.hospital ?? '-' }}</td>
-            <td class="px-4 py-3 text-content-primary">{{ r.primaryDiagnosis ?? '-' }}</td>
-            <td class="px-4 py-3"><SourceBadge :source="r.source" :hospital="r.hospital" /></td>
+            <td class="px-4 py-3 text-content-secondary">{{ formatDate(r.recordedAt) }}</td>
+            <td class="px-4 py-3 text-content-primary">{{ r.recordType ?? '-' }}</td>
+            <td class="px-4 py-3 text-content-secondary">{{ r.nhiInstitution ?? '-' }}</td>
+            <td class="px-4 py-3"><SourceBadge :source="r.source" :hospital="r.nhiInstitution" /></td>
             <td class="px-4 py-3">
               <RouterLink :to="`/health-records/${r.id}`" class="text-accent hover:underline text-xs">詳情</RouterLink>
             </td>

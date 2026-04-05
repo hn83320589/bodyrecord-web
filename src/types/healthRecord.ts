@@ -1,18 +1,15 @@
 import type { LabResultDetail } from './lab'
 import type { MedicationRecord } from './medication'
 
+// 對應後端 HealthRecordResponse
 export interface HealthRecord {
   id: number
-  clinicDate: string
-  hospital?: string
-  hospitalCode?: string
-  primaryIcdCode?: string
-  primaryDiagnosis?: string
-  secondaryDiagnoses?: string | null
-  copay?: number
-  totalPoints?: number
-  source: 'manual' | 'nhi_import'
+  recordType: string             // "medication" | "visit" | "lab_result" | ...
+  recordedAt: string
   note?: string
+  source: 'manual' | 'nhi_import'
+  nhiInstitution?: string
+  nhiInstitutionCode?: string
   createdAt: string
 }
 

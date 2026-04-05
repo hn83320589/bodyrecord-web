@@ -153,15 +153,15 @@ const monthCount = computed(() => {
 })
 
 const nextVisit = computed(() => {
-  const future = safeRecords<HealthRecord>(hrStore.records).filter((r: HealthRecord) => new Date(r.clinicDate) > new Date())
+  const future = safeRecords<HealthRecord>(hrStore.records).filter((r: HealthRecord) => new Date(r.recordedAt) > new Date())
   if (future.length === 0) return '-'
   const next = future.sort((a: HealthRecord, b: HealthRecord) => new Date(a.clinicDate).getTime() - new Date(b.clinicDate).getTime())[0]
   return formatDate(next.clinicDate)
 })
 const nextVisitHospital = computed(() => {
-  const future = safeRecords<HealthRecord>(hrStore.records).filter((r: HealthRecord) => new Date(r.clinicDate) > new Date())
+  const future = safeRecords<HealthRecord>(hrStore.records).filter((r: HealthRecord) => new Date(r.recordedAt) > new Date())
   if (future.length === 0) return ''
-  return future.sort((a: HealthRecord, b: HealthRecord) => new Date(a.clinicDate).getTime() - new Date(b.clinicDate).getTime())[0].hospital ?? ''
+  return future.sort((a: HealthRecord, b: HealthRecord) => new Date(a.clinicDate).getTime() - new Date(b.clinicDate).getTime())[0].nhiInstitution ?? ''
 })
 
 const rangeStart = computed(() => {
@@ -252,8 +252,8 @@ const timelineItems = computed((): TimelineItem[] => {
       if (d < start) continue
       items.push({
         date: d, day: d.getDate(), weekday: WEEKDAYS[d.getDay()],
-        title: m.drugName, badge: '用藥', category: 'med',
-        description: m.days ? `${m.days} 天` : undefined,
+        title: m.medicationName, badge: '用藥', category: 'med',
+        description: m.durationDays ? `${m.durationDays} 天` : undefined,
         onClick: () => router.push('/medications'),
       })
     }
